@@ -11,7 +11,7 @@
 
 Cloud stable 清单的权威地址为：
 
-`https://raw.githubusercontent.com/lmixture/JavdBviewed-release/main/manifests/cloud/stable.json`
+`https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/manifests/cloud/stable.json`
 
 Cloud 内置这个地址。自部署者无需配置主地址、检查开关或更新通道；网络需要加速时，仅可通过 `CLOUD_UPDATE_MANIFEST_MIRRORS` 提供完整的等价清单 URL 列表。
 
