@@ -6,6 +6,7 @@ const root = fileURLToPath(new URL('../manifests/', import.meta.url))
 const semverPattern = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/
 const digestPattern = /^sha256:[a-f0-9]{64}$/
 const migrationRisks = new Set(['none', 'low', 'medium', 'high'])
+const releaseStatuses = new Set(['preparing', 'released'])
 
 async function jsonFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true })
@@ -26,6 +27,7 @@ function validate(manifest, file) {
   assert(manifest?.schemaVersion === 1, `${file}: schemaVersion must be 1`)
   assert(manifest.product === 'javdbviewed-cloud', `${file}: unsupported product`)
   assert(manifest.channel === 'stable', `${file}: unsupported channel`)
+  assert(releaseStatuses.has(manifest.releaseStatus), `${file}: releaseStatus must be preparing or released`)
   assert(semverPattern.test(manifest.latest?.version ?? ''), `${file}: latest.version must be semver`)
   assert(typeof manifest.latest?.commit === 'string' && /^[a-f0-9]{40}$/.test(manifest.latest.commit), `${file}: latest.commit must be a full Git SHA`)
   assert(typeof manifest.latest?.buildNumber === 'string' && manifest.latest.buildNumber.length > 0, `${file}: latest.buildNumber is required`)

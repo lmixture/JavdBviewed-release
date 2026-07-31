@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "product": "javdbviewed-cloud",
   "channel": "stable",
+  "releaseStatus": "preparing",
   "latest": {
     "version": "1.0.0",
     "commit": "5c724df542784dc8cff596daf31ed958f35c0d40",
