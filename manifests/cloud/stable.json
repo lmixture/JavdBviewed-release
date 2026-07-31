@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "product": "javdbviewed-cloud",
+  "channel": "stable",
+  "latest": {
+    "version": "1.0.0",
+    "commit": "8550db124ec7a0ef6c1023ff40b602cb122ac4f6",
+    "buildNumber": "git-8550db124ec7",
+    "releasedAt": "2026-07-31T00:00:00Z",
+    "image": "ghcr.io/lmixture/javdbviewed-cloud:1.0.0",
+    "releaseNotesUrl": "https://github.com/lmixture/JavdBviewed-release/blob/main/releases/cloud/v1.0.0.md",
+    "critical": false,
+    "security": false,
+    "requiresBackup": true,
+    "migrationRisk": "low",
+    "minCurrentVersion": "0.0.0"
+  },
+  "messages": [
+    {
+      "level": "info",
+      "title": "更新前建议创建快照",
+      "body": "升级前请先在 Cloud 数据管理中创建快照，并备份宿主机 data 目录。Cloud 只提示更新，不会自动替换容器。"
+    }
+  ]
+}
