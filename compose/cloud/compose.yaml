@@ -1,0 +1,30 @@
+services:
+  cloud:
+    image: ${CLOUD_IMAGE_NAME:-ghcr.io/javdbviewed/javdbviewed-cloud:latest}
+    container_name: javdbviewed-cloud
+    restart: unless-stopped
+    ports:
+      - "18080:8080"
+    environment:
+      CLOUD_ADDR: ":8080"
+      CLOUD_DATA_DIR: /data
+      CLOUD_ADMIN_USER: admin
+      CLOUD_JWT_SECRET: ${CLOUD_JWT_SECRET}
+      CLOUD_ADMIN_PASSWORD: ${CLOUD_ADMIN_PASSWORD:-}
+      CLOUD_CORS_ORIGINS: ${CLOUD_CORS_ORIGINS:-}
+      CLOUD_UPDATE_MANIFEST_MIRRORS: ${CLOUD_UPDATE_MANIFEST_MIRRORS:-}
+    volumes:
+      - ./data:/data
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=64m,mode=1777,noexec,nosuid,nodev
+    healthcheck:
+      test: ["CMD", "/app/cloud", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

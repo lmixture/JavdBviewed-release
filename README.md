@@ -7,6 +7,8 @@
 - Cloud：GHCR 容器镜像与 stable 更新清单。
 - 后续客户端：沿用 `manifests/<product>/<channel>.json` 的目录结构，各产品独立维护版本和发布说明。
 
+Cloud 首次部署可直接使用 [Compose 模板](./compose/cloud/compose.yaml) 与 [环境变量示例](./compose/cloud/.env.example)；模板默认拉取 `:latest` 正式镜像。
+
 ## Cloud 更新清单
 
 Cloud stable 清单的权威地址为：
