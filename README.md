@@ -1,36 +1,92 @@
 # JavdBviewed 发布中心
 
-此仓库是 JavdBviewed 各产品的公开发布元数据中心。它托管版本清单、可复用的发布说明和发布校验，不托管 Cloud 容器镜像或用户数据。
+这里提供 JavdBviewed 各端产品的正式版本、下载入口和自部署镜像信息。
 
-## 当前产品
+## 快速入口
 
-- Cloud：GHCR 容器镜像与 stable 更新清单。
-- 后续客户端：沿用 `manifests/<product>/<channel>.json` 的目录结构，各产品独立维护版本和发布说明。
+- [产品文档](https://docs.we-together.club/)
+- [浏览器扩展下载与安装](https://docs.we-together.club/download/)
+- [Cloud 1.0.0 发布页](https://github.com/JavdBviewed/JavdBviewed-release/releases/tag/cloud-v1.0.0)
+- [Cloud Compose 模板](./compose/cloud/compose.yaml)
+- [Cloud 环境变量示例](./compose/cloud/.env.example)
 
-Cloud 首次部署可直接使用 [Compose 模板](./compose/cloud/compose.yaml) 与 [环境变量示例](./compose/cloud/.env.example)；模板默认拉取 `:latest` 正式镜像。
+## Cloud 自部署
 
-## Cloud 更新清单
+Cloud 是运行在你自己的设备或服务器上的数据服务。它不会把数据库托管到 JavdBviewed，也不会自动替换或重启你的容器。
 
-Cloud stable 清单的权威地址为：
+首次部署可以直接使用仓库中的 Compose 模板。
+
+Linux 或 macOS：
+
+```bash
+mkdir javdbviewed-cloud
+cd javdbviewed-cloud
+curl -fsSLO https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/compose/cloud/compose.yaml
+curl -fsSLO https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/compose/cloud/.env.example
+mv .env.example .env
+```
+
+Windows PowerShell：
+
+```powershell
+New-Item -ItemType Directory javdbviewed-cloud
+Set-Location javdbviewed-cloud
+Invoke-WebRequest https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/compose/cloud/compose.yaml -OutFile compose.yaml
+Invoke-WebRequest https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/compose/cloud/.env.example -OutFile .env.example
+Move-Item .env.example .env
+```
+
+编辑 `.env`，至少填写一个强随机的 `CLOUD_JWT_SECRET`，然后启动：
+
+```bash
+docker compose -f compose.yaml pull
+docker compose -f compose.yaml up -d
+docker compose -f compose.yaml logs --tail 100 cloud
+```
+
+模板默认使用 `ghcr.io/javdbviewed/javdbviewed-cloud:latest`。首次启动时如果没有设置 `CLOUD_ADMIN_PASSWORD`，请从日志中保存一次性临时密码，再使用固定账号 `admin` 登录并修改密码。
+
+完整的目录准备、环境变量、HTTPS 反向代理、备份、升级和回滚步骤，请查看[文档站的 Cloud 部署指南](https://docs.we-together.club/download/#cloud-deploy)。
+
+## 常用环境变量
+
+| 变量 | 用途 |
+| --- | --- |
+| `CLOUD_IMAGE_NAME` | 镜像地址，默认使用 `:latest`；回滚时改为已验证的固定版本 tag。 |
+| `CLOUD_JWT_SECRET` | 登录和设备令牌的签名密钥，生产环境必填且不要随意更换。 |
+| `CLOUD_ADMIN_PASSWORD` | 首次管理员密码；留空时由服务生成并只在首次启动日志输出一次。 |
+| `CLOUD_CORS_ORIGINS` | 浏览器 Origin 白名单，多个值使用英文逗号分隔。 |
+| `CLOUD_UPDATE_MANIFEST_MIRRORS` | 更新清单加速地址，多个地址使用英文逗号分隔。 |
+
+不要在公开 issue、截图、Compose 文件或仓库提交中暴露 JWT 密钥、管理员密码和 Cloud 数据目录。
+
+## 当前版本
+
+Cloud stable 更新清单：
 
 `https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/manifests/cloud/stable.json`
 
-Cloud 内置这个地址。自部署者无需配置主地址、检查开关或更新通道；网络需要加速时，仅可通过 `CLOUD_UPDATE_MANIFEST_MIRRORS` 提供完整的等价清单 URL 列表。
+当前 Cloud `1.0.0` 已正式发布，镜像摘要为：
 
-清单顶层的 `releaseStatus` 表示该版本是否已经开放部署：
+`sha256:5ea0f66d9810cba1f00489d04a494b4136cb9809563027c73c9017b31ddb7f62`
 
-- `preparing`：版本信息正在准备，镜像或发布说明可能尚未开放。
-- `released`：版本已经正式发布，可以按清单中的镜像 tag 部署或升级。
+部署后可以访问 `/health` 和 `/version`，核对服务是否正常以及实际运行的版本。
 
-候选版本进入清单时先保持 `preparing`。镜像、摘要和发布说明全部验收完成后，再把状态改为 `released`。
+## 其他产品
 
-## 发布顺序
+浏览器扩展和其他客户端的安装包、更新说明会在对应的 GitHub Release 和[文档站](https://docs.we-together.club/)提供。桌面端与 Android 客户端是否开放，以文档站的最新状态为准。
 
-1. 从干净的 Cloud Git 提交构建并推送带版本号的 GHCR 镜像。
-2. 获取 registry 返回的 image digest。
-3. 更新 Cloud manifest 的提交、构建号、发布日期、镜像 tag 和 digest。
-4. 执行 `node scripts/validate-manifests.mjs`。
-5. 创建对应的 GitHub Release，并把清单的 `releaseStatus` 改为 `released`。
-6. 再次执行清单校验并提交此仓库。
+## 维护者信息
 
-不要先发布指向不存在镜像的 stable manifest，也不要把加速域名、私有地址、token 或用户配置写入清单。
+本仓库保存公开发布所需的版本清单、发布说明和校验脚本，不保存 Cloud 用户数据，也不托管 Cloud 源码。
+
+发布清单中的 `releaseStatus` 有两种状态：
+
+- `preparing`：版本仍在准备，不建议部署。
+- `released`：镜像、摘要和发布说明已完成验收，可以按清单部署。
+
+发布新版本时，应先从干净提交构建并完成安全门禁，再获取 registry 返回的 digest，更新 manifest，运行 `node scripts/validate-manifests.mjs`，最后创建 GitHub Release。
+
+## 许可证
+
+各产品的许可证以对应发布说明为准。Cloud 使用 AGPL-3.0-only；自部署的密码、网络暴露、备份和升级注意事项请查看[Cloud 部署指南](https://docs.we-together.club/download/#cloud-deploy)。
