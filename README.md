@@ -62,30 +62,13 @@ docker compose -f compose.yaml logs --tail 100 cloud
 
 ## 当前版本
 
-Cloud stable 更新清单：
+当前 Cloud `1.0.0` 已正式发布。查看[发布说明](https://github.com/JavdBviewed/JavdBviewed-release/releases/tag/cloud-v1.0.0)了解首次部署、升级和回滚步骤。
 
-`https://raw.githubusercontent.com/JavdBviewed/JavdBviewed-release/main/manifests/cloud/stable.json`
-
-当前 Cloud `1.0.0` 已正式发布，镜像摘要为：
-
-`sha256:5ea0f66d9810cba1f00489d04a494b4136cb9809563027c73c9017b31ddb7f62`
-
-部署后可以访问 `/health` 和 `/version`，核对服务是否正常以及实际运行的版本。
+部署后可以访问 `/health`，或登录 Cloud 管理台确认服务、设备连接和同步状态。
 
 ## 其他产品
 
 浏览器扩展和其他客户端的安装包、更新说明会在对应的 GitHub Release 和[文档站](https://docs.we-together.club/)提供。桌面端与 Android 客户端是否开放，以文档站的最新状态为准。
-
-## 维护者信息
-
-本仓库保存公开发布所需的版本清单、发布说明和校验脚本，不保存 Cloud 用户数据，也不托管 Cloud 源码。
-
-发布清单中的 `releaseStatus` 有两种状态：
-
-- `preparing`：版本仍在准备，不建议部署。
-- `released`：镜像、摘要和发布说明已完成验收，可以按清单部署。
-
-发布新版本时，应先从干净提交构建并完成安全门禁，再获取 registry 返回的 digest，更新 manifest，运行 `node scripts/validate-manifests.mjs`，最后创建 GitHub Release。
 
 ## 许可证
 
