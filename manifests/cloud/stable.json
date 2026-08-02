@@ -4,18 +4,18 @@
   "channel": "stable",
   "releaseStatus": "released",
   "latest": {
-    "version": "1.0.0",
-    "commit": "7f14a820e344a36f7b3bf0f01387dab2686d65e4",
-    "buildNumber": "git-7f14a820e344",
-    "releasedAt": "2026-08-01T15:00:11Z",
-    "image": "ghcr.io/javdbviewed/javdbviewed-cloud:1.0.0",
-    "imageDigest": "sha256:5ea0f66d9810cba1f00489d04a494b4136cb9809563027c73c9017b31ddb7f62",
-    "releaseNotesUrl": "https://github.com/JavdBviewed/JavdBviewed-release/blob/main/releases/cloud/v1.0.0.md",
+    "version": "1.1.0",
+    "commit": "b4dc739269fe23ae4757458d9d78b80841114ec4",
+    "buildNumber": "git-b4dc739269fe",
+    "releasedAt": "2026-08-02T14:56:14Z",
+    "image": "ghcr.io/javdbviewed/javdbviewed-cloud:1.1.0",
+    "imageDigest": "sha256:100679a40b6696fbe993beb5ec336f1ea4bcf9aeace55c4c368351247120bc86",
+    "releaseNotesUrl": "https://github.com/JavdBviewed/JavdBviewed-release/blob/main/releases/cloud/v1.1.0.md",
     "critical": false,
     "security": false,
     "requiresBackup": true,
     "migrationRisk": "low",
-    "minCurrentVersion": "0.0.0"
+    "minCurrentVersion": "1.0.0"
   },
   "messages": [
     {
